@@ -25,8 +25,8 @@ public class BlogMetasController {
         return null;
     }
 
-    @PostMapping("/createMeta")
-    public boolean createMeta(){
+    @PostMapping("/saveMeta")
+    public boolean saveMeta(){
         return false;
     }
 
@@ -35,8 +35,8 @@ public class BlogMetasController {
         return false;
     }
 
-    @PostMapping("/deleteMetaById")
-    public boolean deleteMetaById(int mid){
+    @PostMapping("/removeMetaById")
+    public boolean removeMetaById(int mid){
         return false;
     }
 

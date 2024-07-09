@@ -14,5 +14,5 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequestMapping("/blogGroupInfo")
 public class BlogGroupInfoController {
-
+    
 }

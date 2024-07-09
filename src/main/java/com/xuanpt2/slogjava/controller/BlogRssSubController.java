@@ -1,5 +1,6 @@
 package com.xuanpt2.slogjava.controller;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 
@@ -14,5 +15,20 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequestMapping("/blogRssSub")
 public class BlogRssSubController {
+    /**
+     * 添加RSS订阅
+     *
+     */
+    @PostMapping("/saveRssSub")
+    public boolean saveRssSub(String rssFeed){
+        return false;
+    }
 
+    /**
+     * 移除RSS订阅
+     */
+    @PostMapping("/removeRssSubById")
+    public boolean removeRssSub(int rssId){
+        return false;
+    }
 }

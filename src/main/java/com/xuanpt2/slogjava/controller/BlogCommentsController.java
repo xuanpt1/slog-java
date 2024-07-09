@@ -27,18 +27,18 @@ public class BlogCommentsController {
         return null;
     }
 
-    @PostMapping("/deleteCommentByCoid")
-    public boolean deleteCommentByCoid(int coid){
+    @PostMapping("/removeCommentByCoid")
+    public boolean removeCommentByCoid(int coid){
         return false;
     }
 
-    @PostMapping("/deleteCommentBatchByCoid")
-    public boolean deleteCommentBatchByCoid(List<Integer> coidList){
+    @PostMapping("/removeCommentBatchByCoid")
+    public boolean removeCommentBatchByCoid(List<Integer> coidList){
         return false;
     }
 
-    @PostMapping("/insertComment")
-    public boolean insertComment(BlogComments blogComment){
+    @PostMapping("/saveComment")
+    public boolean saveComment(BlogComments blogComment){
         return false;
     }
 
