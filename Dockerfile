@@ -1,4 +1,4 @@
-FROM openjdk:17-jre
+FROM openjdk:17-slim-buster
 LABEL authors="xuanpt2"
 WORKDIR /app
 ADD /target/slog-java-0.0.1-SNAPSHOT.jar app.jar
