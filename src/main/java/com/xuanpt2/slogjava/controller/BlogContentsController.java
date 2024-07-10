@@ -1,9 +1,13 @@
 package com.xuanpt2.slogjava.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xuanpt2.slogjava.dto.BlogContentAbstractDto;
 import com.xuanpt2.slogjava.dto.BlogMetaDto;
 import com.xuanpt2.slogjava.entity.BlogContents;
+import com.xuanpt2.slogjava.entity.BlogRelationship;
 import com.xuanpt2.slogjava.service.IBlogContentsService;
+import com.xuanpt2.slogjava.service.IBlogMetasService;
+import com.xuanpt2.slogjava.service.IBlogRelationshipService;
 import com.xuanpt2.slogjava.service.impl.BlogRssContentsServiceImpl;
 import com.xuanpt2.slogjava.utils.RegexUtils;
 import com.xuanpt2.slogjava.vo.TResponseVo;
@@ -33,6 +37,12 @@ public class BlogContentsController {
     @Autowired
     private IBlogContentsService blogContentsService;
 
+    @Autowired
+    private IBlogMetasService blogMetasService;
+
+    @Autowired
+    private IBlogRelationshipService blogRelationshipService;
+
 //    @GetMapping("/testInit")
 //    public BlogContents testInit(){
 //        BlogContents blogContents = new BlogContents();
@@ -58,6 +68,11 @@ public class BlogContentsController {
     @PostMapping("/getContentById")
     public TResponseVo<BlogContents> getContentById(int cid){
         Optional<BlogContents> optionalBlogContents = blogContentsService.getOptById(cid);
+        BlogContents blogContent = optionalBlogContents.get();
+        QueryWrapper<BlogRelationship> relationshipQueryWrapper = new QueryWrapper<>();
+        relationshipQueryWrapper.eq("cid",blogContent.getCid());
+        List<BlogRelationship> midList = blogRelationshipService.list(relationshipQueryWrapper);
+        System.out.println(midList);
         return optionalBlogContents.map(TResponseVo::success).orElseGet(() -> TResponseVo.error(404, "请求的文章不存在"));
     }
 
