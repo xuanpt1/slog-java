@@ -3,6 +3,8 @@ package com.xuanpt2.slogjava.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.xuanpt2.slogjava.dto.BlogMetaDto;
+
 import java.io.Serializable;
 
 /**
@@ -93,5 +95,9 @@ public class BlogMetas implements Serializable {
         ", pmid = " + pmid +
         ", count = " + count +
         "}";
+    }
+
+    public BlogMetaDto toDto(){
+        return new BlogMetaDto(this);
     }
 }

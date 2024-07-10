@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xuanpt2.slogjava.dto.BlogContentAbstractDto;
 import com.xuanpt2.slogjava.dto.BlogMetaDto;
 import com.xuanpt2.slogjava.entity.BlogContents;
+import com.xuanpt2.slogjava.entity.BlogMetas;
 import com.xuanpt2.slogjava.entity.BlogRelationship;
 import com.xuanpt2.slogjava.service.IBlogContentsService;
 import com.xuanpt2.slogjava.service.IBlogMetasService;
@@ -64,17 +65,27 @@ public class BlogContentsController {
         return null;
     }
 
-    @CrossOrigin
     @PostMapping("/getContentById")
-    public TResponseVo<BlogContents> getContentById(@RequestBody Map<String, Object> map) {
+    public TResponseVo<BlogContentAbstractDto> getContentById(@RequestBody Map<String, Object> map) {
         Optional<BlogContents> optionalBlogContents = blogContentsService.getOptById((Serializable) map.get("cid"));
         BlogContents blogContent = optionalBlogContents.get();
         QueryWrapper<BlogRelationship> relationshipQueryWrapper = new QueryWrapper<>();
         relationshipQueryWrapper.eq("cid",blogContent.getCid());
         List<BlogRelationship> midList = blogRelationshipService.list(relationshipQueryWrapper);
+        List<BlogMetas> blogMetas = new ArrayList<>();
+        List<BlogMetaDto> blogMetaDtoList = new ArrayList<BlogMetaDto>();
+        for (BlogRelationship rela:midList
+             ) {
+            blogMetas.addAll(blogMetasService.list(new QueryWrapper<BlogMetas>().eq("mid",rela.getMid())));
+        }
+        for (BlogMetas meta: blogMetas
+             ) {
+            blogMetaDtoList.add(meta.toDto());
+        }
+
         System.out.println(midList);
-        System.out.println(map);
-        return optionalBlogContents.map(TResponseVo::success).orElseGet(() -> TResponseVo.error(404, "请求的文章不存在"));
+        System.out.println(blogMetaDtoList);
+        return TResponseVo.success(new BlogContentAbstractDto(blogContent,blogMetaDtoList));
     }
 
     @PostMapping("/updateContent")
@@ -98,7 +109,6 @@ public class BlogContentsController {
         return flag? TResponseVo.success(true): TResponseVo.error(500,"save failed");
     }
 
-    @CrossOrigin
     @GetMapping("/testGet")
     public BlogContentAbstractDto testGet(){
 //        List<BlogContentAbstractDto> blogContentAbstractDtoList1 = new ArrayList<BlogContentAbstractDto>();
