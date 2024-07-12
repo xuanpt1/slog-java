@@ -1,5 +1,7 @@
 package com.xuanpt2.slogjava.controller;
 
+import com.xuanpt2.slogjava.entity.BlogUser;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 
@@ -14,5 +16,18 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequestMapping("/blogUser")
 public class BlogUserController {
+    @PostMapping("/saveUser")
+    public boolean saveUser(BlogUser blogUser){
+        return false;
+    }
 
+    @PostMapping("/updateUser")
+    public boolean updateUser(BlogUser blogUser){
+        return false;
+    }
+
+    @PostMapping("/removeUser")
+    public boolean removeUser(BlogUser blogUser){
+        return false;
+    }
 }

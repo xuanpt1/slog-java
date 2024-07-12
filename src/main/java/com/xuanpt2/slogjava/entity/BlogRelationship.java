@@ -4,8 +4,14 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -16,6 +22,10 @@ import java.io.Serializable;
  * @since 2024-7-4
  */
 @TableName("blog_relationship")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class BlogRelationship implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,20 +44,29 @@ public class BlogRelationship implements Serializable {
     @TableField("mid")
     private Integer mid;
 
-    public Integer getCid() {
-        return cid;
-    }
+//    public Integer getCid() {
+//        return cid;
+//    }
+//
+//    public void setCid(Integer cid) {
+//        this.cid = cid;
+//    }
+//
+//    public Integer getMid() {
+//        return mid;
+//    }
+//
+//    public void setMid(Integer mid) {
+//        this.mid = mid;
+//    }
 
-    public void setCid(Integer cid) {
-        this.cid = cid;
-    }
-
-    public Integer getMid() {
-        return mid;
-    }
-
-    public void setMid(Integer mid) {
-        this.mid = mid;
+    public static List<Integer> toMidList(List<BlogRelationship> blogRelationshipList) {
+        List<Integer> midList = new ArrayList<>();
+        for (BlogRelationship blogRela :
+                blogRelationshipList) {
+            midList.add(blogRela.getMid());
+        }
+        return midList;
     }
 
     @Override

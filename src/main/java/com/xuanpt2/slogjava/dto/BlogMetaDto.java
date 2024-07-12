@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,4 +23,14 @@ public class BlogMetaDto {
         this.name = blogMeta.getName();
         this.description = blogMeta.getDescription();
     }
+
+    public static List<BlogMetaDto> toDtoList(List<BlogMetas> blogMetasList){
+        ArrayList<BlogMetaDto> list = new ArrayList<>();
+        for (BlogMetas blogMeta :
+                blogMetasList) {
+            list.add(new BlogMetaDto(blogMeta));
+        }
+        return list;
+    }
+
 }

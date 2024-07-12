@@ -1,8 +1,12 @@
 package com.xuanpt2.slogjava.controller;
 
+import com.xuanpt2.slogjava.entity.BlogRssSub;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
+
+import java.util.List;
 
 /**
  * <p>
@@ -30,5 +34,15 @@ public class BlogRssSubController {
     @PostMapping("/removeRssSubById")
     public boolean removeRssSub(int rssId){
         return false;
+    }
+
+    @PostMapping("updateRssSub")
+    public boolean updateRssSub(BlogRssSub blogRssSub){
+        return false;
+    }
+
+    @GetMapping("/getAllRssSub")
+    public List<BlogRssSub> getAllRssSub(){
+        return null;
     }
 }

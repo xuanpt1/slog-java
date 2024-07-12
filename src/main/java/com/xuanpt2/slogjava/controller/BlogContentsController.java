@@ -1,11 +1,15 @@
 package com.xuanpt2.slogjava.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.xuanpt2.slogjava.dto.BlogContentAbstractDto;
+import com.xuanpt2.slogjava.dto.BlogContentsDto;
 import com.xuanpt2.slogjava.dto.BlogMetaDto;
 import com.xuanpt2.slogjava.entity.BlogContents;
 import com.xuanpt2.slogjava.entity.BlogMetas;
 import com.xuanpt2.slogjava.entity.BlogRelationship;
+import com.xuanpt2.slogjava.mapper.BlogMetasMapper;
 import com.xuanpt2.slogjava.service.IBlogContentsService;
 import com.xuanpt2.slogjava.service.IBlogMetasService;
 import com.xuanpt2.slogjava.service.IBlogRelationshipService;
@@ -43,59 +47,83 @@ public class BlogContentsController {
     @Autowired
     private IBlogRelationshipService blogRelationshipService;
 
-//    @GetMapping("/testInit")
-//    public BlogContents testInit(){
-//        BlogContents blogContents = new BlogContents();
-//        blogContents.setTitle("开始2");
-//        blogContents.setAllowComment("1");
-//        blogContents.setSlug("Default");
-//        blogContents.setDescription("just a test content");
-//        blogContents.setAuthorId(1);
-//        blogContents.setStatus("public");
-//        blogContents.setCreatedTime(LocalDateTime.now());
-//        blogContents.setModifiedTime(LocalDateTime.now());
-//        blogContents.setTouchTime(LocalDateTime.now());
-//
-//        blogContentsService.save(blogContents);
-//        return blogContents;
-//    }
-
+    /**
+     * 获取所有博文的大致信息
+     * @return TResponseVo<List<BlogContentAbstractDto>> 所有博文的大致信息
+     */
     @GetMapping("/getAllContents")
-    public List<BlogContents> getAllContents(){
-        return null;
+    public TResponseVo<List<BlogContentAbstractDto>> getAllContents(){
+        List<BlogContentAbstractDto> blogContentAbstractDtoList = new ArrayList<>();
+        List<BlogContents> blogContentsList = blogContentsService.list();
+
+        QueryWrapper<BlogRelationship> blogRelationshipQueryWrapper = new QueryWrapper<BlogRelationship>();
+
+        try {
+            for (BlogContents blogContents :
+                    blogContentsList) {
+                blogRelationshipQueryWrapper.clear();
+
+                blogRelationshipQueryWrapper.eq("cid", blogContents.getCid());
+                List<BlogRelationship> blogRelationshipList = blogRelationshipService.list(blogRelationshipQueryWrapper);
+                List<BlogMetaDto> blogMetaDtoList =
+                        BlogMetaDto.toDtoList(blogMetasService.listByIds(BlogRelationship.toMidList(blogRelationshipList)));
+                blogContentAbstractDtoList.add(new BlogContentAbstractDto(blogContents,blogMetaDtoList));
+            }
+
+        }catch (Exception e){
+            return TResponseVo.error(500,e.getMessage());
+        }
+
+        return TResponseVo.success(blogContentAbstractDtoList);
     }
 
+    /**
+     * 通过Id获取文章包含tag的全部信息
+     * @param map cid
+     * @return 返回带有List<Meta> 的ContentAbsDTO->TResponseVo
+     */
     @PostMapping("/getContentById")
-    public TResponseVo<BlogContentAbstractDto> getContentById(@RequestBody Map<String, Object> map) {
-        Optional<BlogContents> optionalBlogContents = blogContentsService.getOptById((Serializable) map.get("cid"));
-        BlogContents blogContent = optionalBlogContents.get();
-        QueryWrapper<BlogRelationship> relationshipQueryWrapper = new QueryWrapper<>();
-        relationshipQueryWrapper.eq("cid",blogContent.getCid());
-        List<BlogRelationship> midList = blogRelationshipService.list(relationshipQueryWrapper);
-        List<BlogMetas> blogMetas = new ArrayList<>();
-        List<BlogMetaDto> blogMetaDtoList = new ArrayList<BlogMetaDto>();
-        for (BlogRelationship rela:midList
-             ) {
-            blogMetas.addAll(blogMetasService.list(new QueryWrapper<BlogMetas>().eq("mid",rela.getMid())));
-        }
-        for (BlogMetas meta: blogMetas
-             ) {
-            blogMetaDtoList.add(meta.toDto());
+    public TResponseVo<BlogContentsDto> getContentById(@RequestBody Map<String, Object> map) {
+
+        try {
+            BlogContents blogContent = blogContentsService.getById((Serializable) map.get("cid"));
+            List<BlogRelationship> blogRelationshipList =
+                    blogRelationshipService.list(new QueryWrapper<BlogRelationship>().eq("cid", map.get("cid")));
+            List<BlogMetaDto> blogMetaDtoList =
+                    BlogMetaDto.toDtoList(blogMetasService.listByIds(BlogRelationship.toMidList(blogRelationshipList)));
+            return TResponseVo.success(new BlogContentsDto(blogContent, blogMetaDtoList));
+        }catch (Exception e){
+            return TResponseVo.error(500,e.getMessage());
         }
 
-        System.out.println(midList);
-        System.out.println(blogMetaDtoList);
-        return TResponseVo.success(new BlogContentAbstractDto(blogContent,blogMetaDtoList));
     }
 
     @PostMapping("/updateContent")
-    public boolean updateContent(BlogContents blogContent){
-        return false;
+    public TResponseVo<Boolean> updateContent(@RequestBody BlogContentsDto blogContentsDto){
+        try {
+            blogContentsService.saveOrUpdate(BlogContentsDto.toBlogContents(blogContentsDto));
+            blogRelationshipService.remove(new QueryWrapper<BlogRelationship>().eq("cid",blogContentsDto.getCid()));
+            for (BlogMetaDto blogMetaDto :
+                    blogContentsDto.getTagList()) {
+                blogRelationshipService.saveOrUpdateByMultiId(new BlogRelationship(blogContentsDto.getCid(),
+                        blogMetaDto.getId()));
+            }
+            return TResponseVo.success(true);
+        }catch (Exception e){
+            return TResponseVo.error(500,e.getMessage());
+        }
+
     }
 
     @PostMapping("/removeContentById")
-    public boolean removeContentById(int cid){
-        return false;
+    public TResponseVo<Boolean> removeContentById(Map<String, Object> map){
+        try {
+            boolean flag = blogContentsService.removeById((Serializable) map.get("cid"));
+
+            return flag ? TResponseVo.success(true) : TResponseVo.error(500,"移除文章失败");
+        }catch (Exception e){
+            return TResponseVo.error(500,e.getMessage());
+        }
     }
 
     @PostMapping("/removeContentBatchById")
@@ -104,9 +132,18 @@ public class BlogContentsController {
     }
 
     @PostMapping("/saveContent")
-    public TResponseVo<Boolean> saveContent(BlogContents blogContent){
-        boolean flag = blogContentsService.save(blogContent);
-        return flag? TResponseVo.success(true): TResponseVo.error(500,"save failed");
+    public TResponseVo<Boolean> saveContent(@RequestBody BlogContentsDto blogContentsDto){
+        try {
+            blogContentsService.saveOrUpdate(BlogContentsDto.toBlogContents(blogContentsDto));
+            for (BlogMetaDto blogMetaDto :
+                    blogContentsDto.getTagList()) {
+                blogRelationshipService.saveOrUpdateByMultiId(new BlogRelationship(blogContentsDto.getCid(),
+                        blogMetaDto.getId()));
+            }
+            return TResponseVo.success(true);
+        }catch (Exception e){
+            return TResponseVo.error(500,e.getMessage());
+        }
     }
 
     @GetMapping("/testGet")
