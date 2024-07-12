@@ -116,9 +116,11 @@ public class BlogContentsController {
     }
 
     @PostMapping("/removeContentById")
-    public TResponseVo<Boolean> removeContentById(Map<String, Object> map){
+    public TResponseVo<Boolean> removeContentById(@RequestBody Map<String, Object> map){
         try {
             boolean flag = blogContentsService.removeById((Serializable) map.get("cid"));
+            boolean flag2 = blogRelationshipService.remove(new QueryWrapper<BlogRelationship>().eq("cid",
+                    (Serializable) map.get("cid")));
 
             return flag ? TResponseVo.success(true) : TResponseVo.error(500,"移除文章失败");
         }catch (Exception e){
