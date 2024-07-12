@@ -122,7 +122,7 @@ public class BlogContentsController {
             boolean flag2 = blogRelationshipService.remove(new QueryWrapper<BlogRelationship>().eq("cid",
                     (Serializable) map.get("cid")));
 
-            return flag ? TResponseVo.success(true) : TResponseVo.error(500,"移除文章失败");
+            return (flag && flag2) ? TResponseVo.success(true) : TResponseVo.error(500,"移除文章失败");
         }catch (Exception e){
             return TResponseVo.error(500,e.getMessage());
         }
