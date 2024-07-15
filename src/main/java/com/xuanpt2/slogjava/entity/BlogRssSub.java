@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -37,6 +39,16 @@ public class BlogRssSub implements Serializable {
      * 该条RSS订阅的URL
      */
     private String rurl;
+
+    public static List<String> toUrlList(List<BlogRssSub> subs){
+        List<String> urls = new ArrayList<String>();
+
+        for (BlogRssSub sub :
+                subs) {
+            urls.add(sub.getRurl());
+        }
+        return urls;
+    }
 
     @Override
     public String toString() {

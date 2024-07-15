@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2024-7-4
  */
 public interface IBlogRssContentsService extends IService<BlogRssContents> {
-
+    public boolean updateUrl(String url, int rid);
 }

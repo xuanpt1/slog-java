@@ -1,15 +1,24 @@
 package com.xuanpt2.slogjava.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xuanpt2.slogjava.dto.BlogGroupDto;
+import com.xuanpt2.slogjava.dto.BlogMetaDto;
+import com.xuanpt2.slogjava.entity.BlogGroupInfo;
 import com.xuanpt2.slogjava.entity.BlogGroups;
 import com.xuanpt2.slogjava.entity.BlogRelationship;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.xuanpt2.slogjava.entity.BlogRssSub;
+import com.xuanpt2.slogjava.service.IBlogGroupInfoService;
+import com.xuanpt2.slogjava.service.IBlogGroupsService;
+import com.xuanpt2.slogjava.service.IBlogRssSubService;
+import com.xuanpt2.slogjava.vo.TResponseVo;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,6 +31,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/blogGroups")
 public class BlogGroupsController {
+    @Autowired
+    private IBlogGroupsService blogGroupsService;
+
+    @Autowired
+    private IBlogGroupInfoService blogGroupInfoService;
+
+    @Autowired
+    private IBlogRssSubService blogRssSubService;
+
     /**
      * 获取所有群组信息
      * @param
@@ -29,19 +47,42 @@ public class BlogGroupsController {
      * @return
      */
     @GetMapping("/getAllGoups")
-    public List<BlogGroups> getAllGroups(){
-        return null;
+    public TResponseVo<List<BlogGroupDto>> getAllGroups(){
+        List<BlogGroups> groupsList = blogGroupsService.list();
+        List<BlogGroupDto> groupDtoList = new ArrayList<>();
+
+        try {
+            for (BlogGroups group :
+                    groupsList) {
+                List<String> urls =
+                        BlogRssSub.toUrlList(blogRssSubService.listByIds(BlogGroupInfo.toRidList(
+                                blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id", group.getGroupId())))));
+                groupDtoList.add(new BlogGroupDto(group, urls));
+            }
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+
+
+        return TResponseVo.success(groupDtoList);
     }
 
     /**
-     * 加入群组
+     * 创建群组
      * @param
      *
      * @return
      */
     @PostMapping("/saveGroup")
-    public boolean saveGroup(String url){
-        return false;
+    public TResponseVo<String> saveGroup(@RequestBody Map<String, Object> map){
+        String title = (String) map.get("url");
+        String uri = RandomStringUtils.random(10);
+        try {
+            blogGroupsService.save(new BlogGroups().setGroupTitle(title).setGroupUrl(uri).setCount(1));
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+        return TResponseVo.success(uri);
     }
 
     /**
@@ -51,23 +92,31 @@ public class BlogGroupsController {
      * @return
      */
     @PostMapping("removeGroupById")
-    public boolean removeGroupById(int groupId){
-        return false;
+    public TResponseVo<Boolean> removeGroupById(@RequestBody Map<String, Object> map){
+        Integer groupId = (Integer) map.get("group_id");
+        try {
+            blogGroupsService.removeById(groupId);
+            blogRssSubService.removeBatchByIds(BlogGroupInfo.toRidList(blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id", groupId))));
+            blogGroupInfoService.remove(new QueryWrapper<BlogGroupInfo>().eq("group_id", groupId));
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+
+        return TResponseVo.success(true);
     }
 
-    @GetMapping("/listTest")
-    public List<BlogRelationship> test(){
-        BlogRelationship b1 = new BlogRelationship();
-        b1.setMid(1);
-        b1.setCid(2);
 
-        BlogRelationship b2 = new BlogRelationship();
-        b2.setMid(3);
-        b2.setCid(4);
-
-        List<BlogRelationship> lb = new ArrayList<BlogRelationship>();
-        lb.add(b1);
-        lb.add(b2);
-        return lb;
+    @GetMapping("/join/{uri}")
+    public BlogGroupDto joinGroup(@PathVariable String uri){
+        BlogGroupDto blogGroupDto = new BlogGroupDto();
+        BlogGroups group = blogGroupsService.getOne(new QueryWrapper<BlogGroups>().eq("group_url",uri));
+        List<String> urls =
+                BlogRssSub.toUrlList(blogRssSubService.listByIds(
+                        BlogGroupInfo.toRidList(blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id", group.getGroupId())))));
+        group.setCount(group.getCount() + 1);
+        blogGroupsService.updateById(group);
+        return new BlogGroupDto(group, urls);
     }
+
+
 }

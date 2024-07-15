@@ -1,36 +1,23 @@
-package com.xuanpt2.slogjava.entity;
+package com.xuanpt2.slogjava.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.xuanpt2.slogjava.entity.BlogGroups;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
+import java.util.List;
 
-/**
- * <p>
- * 
- * </p>
- *
- * @author xuanpt2
- * @since 2024-7-4
- */
-@TableName("blog_groups")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
-public class BlogGroups implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class BlogGroupDto {
     /**
      * 本地群组ID RSS订阅归入默认群组0
      */
-    @TableId(value = "group_id", type = IdType.AUTO)
     private Integer groupId;
 
     /**
@@ -48,13 +35,15 @@ public class BlogGroups implements Serializable {
      */
     private Integer count;
 
-    @Override
-    public String toString() {
-        return "BlogGroups{" +
-        "groupId = " + groupId +
-        ", groupUrl = " + groupUrl +
-        ", groupTitle = " + groupTitle +
-        ", count = " + count +
-        "}";
+    /**
+     * 群组内所有URL
+     */
+    private List<String> feeds;
+
+    public BlogGroupDto(BlogGroups group, List<String> feeds){
+        this.groupUrl = group.getGroupUrl();
+        this.groupTitle = group.getGroupTitle();
+        this.count = group.getCount();
+        this.feeds = feeds;
     }
 }

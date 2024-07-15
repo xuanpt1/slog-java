@@ -38,6 +38,13 @@ public class BlogCommentsController {
         }
     }
 
+    /**
+     *
+     * @param map
+     * @return
+     *
+     * TODO 添加按时间排序 修改DTO层，进行子评论嵌套
+     */
     @PostMapping("/getCommentsByCid")
     public TResponseVo<List<BlogComments>> getCommentsByCid(@RequestBody Map<String ,Object> map){
         Integer cid = (Integer) map.get("cid");

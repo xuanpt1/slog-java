@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -48,6 +50,26 @@ public class BlogGroupInfo implements Serializable {
 
     public void setRid(Integer rid) {
         this.rid = rid;
+    }
+
+    public static List<Integer> toRidList(List<BlogGroupInfo> groupInfoList){
+        List<Integer> list = new ArrayList<Integer>();
+
+        for (BlogGroupInfo info :
+                groupInfoList) {
+            list.add(info.getRid());
+        }
+        return list;
+    }
+
+    public static List<Integer> toGroupIdList(List<BlogGroupInfo> groupInfoList){
+        List<Integer> list = new ArrayList<Integer>();
+
+        for (BlogGroupInfo info :
+                groupInfoList) {
+            list.add(info.getGroupId());
+        }
+        return list;
     }
 
     @Override
