@@ -75,8 +75,8 @@ public class BlogGroupsController {
      */
     @PostMapping("/saveGroup")
     public TResponseVo<String> saveGroup(@RequestBody Map<String, Object> map){
-        String title = (String) map.get("url");
-        String uri = RandomStringUtils.random(10);
+        String title = (String) map.get("title");
+        String uri = RandomStringUtils.randomAlphanumeric(10);
         try {
             blogGroupsService.save(new BlogGroups().setGroupTitle(title).setGroupUrl(uri).setCount(1));
         }catch (Exception e){
