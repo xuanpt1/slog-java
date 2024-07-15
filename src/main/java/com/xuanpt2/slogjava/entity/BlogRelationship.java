@@ -69,6 +69,15 @@ public class BlogRelationship implements Serializable {
         return midList;
     }
 
+    public static List<Integer> toCidList(List<BlogRelationship> blogRelationshipList) {
+        List<Integer> cidList = new ArrayList<>();
+        for (BlogRelationship blogRela :
+                blogRelationshipList) {
+            cidList.add(blogRela.getCid());
+        }
+        return cidList;
+    }
+
     @Override
     public String toString() {
         return "BlogRelationship{" +

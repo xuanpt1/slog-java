@@ -3,6 +3,11 @@ package com.xuanpt2.slogjava.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 import java.io.Serializable;
 
 /**
@@ -14,6 +19,10 @@ import java.io.Serializable;
  * @since 2024-7-4
  */
 @TableName("blog_rss_sub")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class BlogRssSub implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,22 +37,6 @@ public class BlogRssSub implements Serializable {
      * 该条RSS订阅的URL
      */
     private String rurl;
-
-    public Integer getRid() {
-        return rid;
-    }
-
-    public void setRid(Integer rid) {
-        this.rid = rid;
-    }
-
-    public String getRurl() {
-        return rurl;
-    }
-
-    public void setRurl(String rurl) {
-        this.rurl = rurl;
-    }
 
     @Override
     public String toString() {

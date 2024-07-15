@@ -6,10 +6,7 @@ import com.xuanpt2.slogjava.entity.BlogRelationship;
 import com.xuanpt2.slogjava.service.IBlogMetasService;
 import com.xuanpt2.slogjava.service.IBlogRelationshipService;
 import com.xuanpt2.slogjava.vo.TResponseVo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
 import java.io.Serializable;
@@ -24,7 +21,7 @@ import java.util.Map;
  * @author xuanpt2
  * @since 2024-7-4
  */
-@Controller
+@RestController
 @RequestMapping("/blogMetas")
 public class BlogMetasController {
     private IBlogMetasService blogMetasService;

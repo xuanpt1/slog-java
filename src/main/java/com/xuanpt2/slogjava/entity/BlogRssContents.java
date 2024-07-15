@@ -3,6 +3,11 @@ package com.xuanpt2.slogjava.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -15,6 +20,10 @@ import java.time.LocalDateTime;
  * @since 2024-7-4
  */
 @TableName("blog_rss_contents")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class BlogRssContents implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,61 +64,6 @@ public class BlogRssContents implements Serializable {
      */
     private LocalDateTime createdTime;
 
-    public Integer getRcid() {
-        return rcid;
-    }
-
-    public void setRcid(Integer rcid) {
-        this.rcid = rcid;
-    }
-
-    public Integer getRid() {
-        return rid;
-    }
-
-    public void setRid(Integer rid) {
-        this.rid = rid;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
-    }
 
     @Override
     public String toString() {

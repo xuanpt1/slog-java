@@ -4,6 +4,7 @@ import com.xuanpt2.slogjava.entity.BlogUser;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Controller;
  * @author xuanpt2
  * @since 2024-7-4
  */
-@Controller
+@RestController
 @RequestMapping("/blogUser")
 public class BlogUserController {
     @PostMapping("/saveUser")

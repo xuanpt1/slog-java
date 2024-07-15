@@ -97,6 +97,31 @@ public class BlogContentsController {
         }
 
     }
+    
+    @PostMapping("/getContentsAbsByMetaId")
+    public TResponseVo<List<BlogContentAbstractDto>> getContentsByMetaId(@RequestBody Map<String, Object> map){
+        Integer mid = (Integer) map.get("mid");
+        List<BlogContentAbstractDto> blogContentAbstractDtoList = new ArrayList<>();
+        QueryWrapper<BlogRelationship> blogRelationshipQueryWrapper = new QueryWrapper<BlogRelationship>();
+        List<Integer> cidList =
+                BlogRelationship.toCidList(blogRelationshipService.list(new QueryWrapper<BlogRelationship>().eq("mid"
+                        , mid)));
+        try {
+            for (Integer cid :
+                    cidList) {
+                blogRelationshipQueryWrapper.clear();
+
+                List<BlogMetaDto> blogMetaDtoList =
+                        BlogMetaDto.toDtoList(blogMetasService.listByIds(BlogRelationship.toMidList(blogRelationshipService.list(new QueryWrapper<BlogRelationship>().eq("cid", cid)))));
+                BlogContents content = blogContentsService.getById(cid);
+                blogContentAbstractDtoList.add(new BlogContentAbstractDto(content, blogMetaDtoList));
+            }
+
+            return TResponseVo.success(blogContentAbstractDtoList);
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
 
     @PostMapping("/updateContent")
     public TResponseVo<Boolean> updateContent(@RequestBody BlogContentsDto blogContentsDto){

@@ -11,8 +11,9 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ *  已弃用
  * </p>
+ * 不单独处理文章-分类对应关系，转移到文章相关信息内一并处理。
  *
  * @author xuanpt2
  * @since 2024-7-4
