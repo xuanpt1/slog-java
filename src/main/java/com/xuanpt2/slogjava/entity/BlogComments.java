@@ -92,12 +92,12 @@ public class BlogComments implements Serializable {
     /**
      * 赞
      */
-    private Integer like;
+    private Integer likeCount;
 
     /**
      * 踩
      */
-    private Integer dislike;
+    private Integer dislikeCount;
 
     @Override
     public String toString() {

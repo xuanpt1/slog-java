@@ -1,9 +1,11 @@
 package com.xuanpt2.slogjava.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xuanpt2.slogjava.dto.BlogCommentsDto;
 import com.xuanpt2.slogjava.entity.BlogComments;
 import com.xuanpt2.slogjava.service.IBlogCommentsService;
 import com.xuanpt2.slogjava.vo.TResponseVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
@@ -23,6 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/blogComments")
 public class BlogCommentsController {
+    @Autowired
     private IBlogCommentsService blogCommentsService;
 
     @GetMapping("/getAllComments")
@@ -38,6 +41,11 @@ public class BlogCommentsController {
         }
     }
 
+//    @GetMapping("/test")
+//    public List<BlogCommentsDto> test(){
+//        return BlogCommentsDto.toDtoTree(BlogCommentsDto.toDtoList(blogCommentsService.list(new QueryWrapper<BlogComments>().eq("cid",2))));
+//    }
+
     /**
      *
      * @param map
@@ -46,16 +54,23 @@ public class BlogCommentsController {
      * TODO 添加按时间排序 修改DTO层，进行子评论嵌套
      */
     @PostMapping("/getCommentsByCid")
-    public TResponseVo<List<BlogComments>> getCommentsByCid(@RequestBody Map<String ,Object> map){
-        Integer cid = (Integer) map.get("cid");
-        if (blogCommentsService.getOptById(cid).isPresent()){
-            try {
-                return TResponseVo.success(blogCommentsService.list(new QueryWrapper<BlogComments>().eq("cid",cid)));
-            }catch (Exception e){
-                return TResponseVo.error(500, e.getMessage());
-            }
-        }else {
-            return new TResponseVo<>(200, new ArrayList<BlogComments>(), "没有评论喵");
+    public TResponseVo<List<BlogCommentsDto>> getCommentsByCid(@RequestBody Map<String ,Object> map){
+
+        Serializable cid = (Serializable) map.get("cid");
+        try {
+            List<BlogComments> blogComments = blogCommentsService.list(new QueryWrapper<BlogComments>().eq("cid", cid));
+            return TResponseVo.success(BlogCommentsDto.toDtoTree(BlogCommentsDto.toDtoList(blogComments)));
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
+
+    @PostMapping("/getCommentByCoid")
+    public TResponseVo<BlogComments> getCommentByCoid(@RequestBody Map<String, Object> map){
+        try {
+            return blogCommentsService.getOptById((Serializable) map.get("coid")).map(TResponseVo::success).orElseGet(() -> TResponseVo.error(404, "没找到这条评论的信息喵"));
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
         }
     }
 
