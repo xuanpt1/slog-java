@@ -1,11 +1,13 @@
 package com.xuanpt2.slogjava.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xuanpt2.slogjava.dto.BlogCommentsDto;
 import com.xuanpt2.slogjava.entity.BlogComments;
 import com.xuanpt2.slogjava.service.IBlogCommentsService;
 import com.xuanpt2.slogjava.vo.TResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
@@ -94,14 +96,23 @@ public class BlogCommentsController {
 //    }
 
     @PostMapping("/saveComment")
-    public TResponseVo<Boolean> saveComment(@RequestBody BlogComments blogComment){
+    public TResponseVo<Boolean> saveComment(@Validated @RequestBody BlogComments blogComment){
         try {
+            System.out.println(blogComment);
             boolean flag = blogCommentsService.save(blogComment);
             return flag ? TResponseVo.success(true) : TResponseVo.error(500, "保存失败喵");
         }catch (Exception e){
             return TResponseVo.error(500, e.getMessage());
         }
     }
+
+//    @PostMapping("/saveComment")
+//    public TResponseVo<String> saveComment(@Validated @RequestBody BlogComments blogComment){
+////        System.out.println(string);
+////        BlogComments comments = JSON.parseObject(string, BlogComments.class);
+////        System.out.println(comments);
+//        return TResponseVo.success(blogComment.toString());
+//    }
 
     @PostMapping("/updateComment")
     public TResponseVo<Boolean> updateComment(@RequestBody BlogComments blogComment){
