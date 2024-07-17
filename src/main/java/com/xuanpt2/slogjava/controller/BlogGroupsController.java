@@ -48,7 +48,7 @@ public class BlogGroupsController {
      *
      * @return
      */
-    @GetMapping("/getAllGoups")
+    @GetMapping("/getAllGroups")
     public TResponseVo<List<BlogGroupDto>> getAllGroups(){
         List<BlogGroups> groupsList = blogGroupsService.list();
         List<BlogGroupDto> groupDtoList = new ArrayList<>();
