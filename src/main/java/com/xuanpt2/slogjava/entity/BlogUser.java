@@ -3,6 +3,11 @@ package com.xuanpt2.slogjava.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -14,6 +19,10 @@ import java.time.LocalDateTime;
  * @author xuanpt2
  * @since 2024-7-4
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 @TableName("blog_user")
 public class BlogUser implements Serializable {
 
@@ -55,61 +64,11 @@ public class BlogUser implements Serializable {
      */
     private LocalDateTime loggedTime;
 
-    public Integer getUid() {
-        return uid;
-    }
+    /**
+     * 用户角色（配合SpringSecurity
+     */
+    private String urole;
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
-    }
-
-    public String getUname() {
-        return uname;
-    }
-
-    public void setUname(String uname) {
-        this.uname = uname;
-    }
-
-    public String getUpwd() {
-        return upwd;
-    }
-
-    public void setUpwd(String upwd) {
-        this.upwd = upwd;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public LocalDateTime getLoggedTime() {
-        return loggedTime;
-    }
-
-    public void setLoggedTime(LocalDateTime loggedTime) {
-        this.loggedTime = loggedTime;
-    }
 
     @Override
     public String toString() {

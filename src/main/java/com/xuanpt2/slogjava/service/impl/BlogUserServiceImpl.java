@@ -17,4 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class BlogUserServiceImpl extends ServiceImpl<BlogUserMapper, BlogUser> implements IBlogUserService {
 
+    @Override
+    public BlogUser getBlogUserByUname(String uname) {
+
+        return null;
+    }
 }

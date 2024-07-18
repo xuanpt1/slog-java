@@ -65,12 +65,17 @@ public class BlogContentsController {
 
                 blogRelationshipQueryWrapper.eq("cid", blogContents.getCid());
                 List<BlogRelationship> blogRelationshipList = blogRelationshipService.list(blogRelationshipQueryWrapper);
-                List<BlogMetaDto> blogMetaDtoList =
-                        BlogMetaDto.toDtoList(blogMetasService.listByIds(BlogRelationship.toMidList(blogRelationshipList)));
+                List<BlogMetaDto> blogMetaDtoList = new ArrayList<>();
+                if (!blogRelationshipList.isEmpty()){
+                    blogMetaDtoList =
+                            BlogMetaDto.toDtoList(blogMetasService.listByIds(BlogRelationship.toMidList(blogRelationshipList)));
+                }
+
                 blogContentAbstractDtoList.add(new BlogContentAbstractDto(blogContents,blogMetaDtoList));
             }
 
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return TResponseVo.error(500,e.getMessage());
         }
 

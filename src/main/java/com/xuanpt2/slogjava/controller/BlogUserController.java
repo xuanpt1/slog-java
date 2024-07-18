@@ -1,6 +1,8 @@
 package com.xuanpt2.slogjava.controller;
 
 import com.xuanpt2.slogjava.entity.BlogUser;
+import com.xuanpt2.slogjava.service.IBlogUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/blogUser")
 public class BlogUserController {
+    @Autowired
+    private IBlogUserService blogUserService;
+
     @PostMapping("/saveUser")
     public boolean saveUser(BlogUser blogUser){
         return false;

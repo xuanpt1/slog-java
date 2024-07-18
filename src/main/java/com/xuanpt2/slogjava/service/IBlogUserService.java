@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2024-7-4
  */
 public interface IBlogUserService extends IService<BlogUser> {
-
+    public BlogUser getBlogUserByUname(String uname);
 }
