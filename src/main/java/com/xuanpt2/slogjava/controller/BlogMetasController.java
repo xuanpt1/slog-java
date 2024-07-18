@@ -6,6 +6,7 @@ import com.xuanpt2.slogjava.entity.BlogRelationship;
 import com.xuanpt2.slogjava.service.IBlogMetasService;
 import com.xuanpt2.slogjava.service.IBlogRelationshipService;
 import com.xuanpt2.slogjava.vo.TResponseVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
@@ -24,8 +25,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/blogMetas")
 public class BlogMetasController {
+    @Autowired
     private IBlogMetasService blogMetasService;
 
+    @Autowired
     private IBlogRelationshipService blogRelationshipService;
 
     @GetMapping("/getAllMetas")
