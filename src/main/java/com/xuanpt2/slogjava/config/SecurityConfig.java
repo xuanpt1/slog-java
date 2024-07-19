@@ -67,17 +67,17 @@ public class SecurityConfig {
                     conf.failureHandler(this::handleProcess);
                     conf.permitAll();
                 })
-                .cors(conf -> {
-                    CorsConfiguration cors = new CorsConfiguration();
-                    cors.addAllowedOrigin("*");
-                    cors.setAllowCredentials(true);  //允许跨域请求中携带Cookie
-                    cors.addAllowedHeader("*");   //其他的也可以配置，为了方便这里就 * 了
-                    cors.addAllowedMethod("*");
-                    cors.addExposedHeader("*");
-                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    source.registerCorsConfiguration("/**", cors);  //直接针对于所有地址生效
-                    conf.configurationSource(source);
-                })
+//                .cors(conf -> {
+//                    CorsConfiguration cors = new CorsConfiguration();
+//                    cors.addAllowedOrigin("*");
+//                    cors.setAllowCredentials(true);  //允许跨域请求中携带Cookie
+//                    cors.addAllowedHeader("*");   //其他的也可以配置，为了方便这里就 * 了
+//                    cors.addAllowedMethod("*");
+//                    cors.addExposedHeader("*");
+//                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//                    source.registerCorsConfiguration("/**", cors);  //直接针对于所有地址生效
+//                    conf.configurationSource(source);
+//                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(conf -> {
                     conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
