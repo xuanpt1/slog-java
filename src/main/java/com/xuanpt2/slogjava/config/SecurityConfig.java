@@ -58,7 +58,6 @@ public class SecurityConfig {
                     conf.requestMatchers(HttpMethod.GET,"/blogMetas/getAllMetas").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();
-                    conf.requestMatchers("/login").permitAll();
                     conf.anyRequest().authenticated();
                 })
                 .formLogin(conf -> {
