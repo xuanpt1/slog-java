@@ -22,13 +22,13 @@ import java.util.List;
 @RequestMapping("/blogRelationship")
 public class BlogRelationshipController {
 
-    @GetMapping("/test")
-    public BlogRelationship test(){
-        BlogRelationship br = new BlogRelationship();
-        br.setCid(1);
-        br.setMid(5);
-        return br;
-    }
+//    @GetMapping("/test")
+//    public BlogRelationship test(){
+//        BlogRelationship br = new BlogRelationship();
+//        br.setCid(1);
+//        br.setMid(5);
+//        return br;
+//    }
 
     /**
      * 新增一项博文-分类对应关系

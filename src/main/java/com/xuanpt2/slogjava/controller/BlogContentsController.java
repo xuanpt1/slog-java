@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -104,16 +105,21 @@ public class BlogContentsController {
     }
     
     @PostMapping("/getContentsAbsByMetaId")
-    public TResponseVo<List<BlogContentAbstractDto>> getContentsByMetaId(@RequestBody Map<String, Object> map){
-        Integer mid = (Integer) map.get("mid");
+    public TResponseVo<List<BlogContentAbstractDto>> getContentsByMetaId(@RequestBody List<Integer> midList){
+        List<Integer> cidList = new ArrayList<>();
         List<BlogContentAbstractDto> blogContentAbstractDtoList = new ArrayList<>();
         QueryWrapper<BlogRelationship> blogRelationshipQueryWrapper = new QueryWrapper<BlogRelationship>();
-        List<Integer> cidList =
-                BlogRelationship.toCidList(blogRelationshipService.list(new QueryWrapper<BlogRelationship>().eq("mid"
-                        , mid)));
+
         try {
+            for (Integer mid :
+                    midList) {
+                cidList.addAll(BlogRelationship.toCidList(blogRelationshipService.list(new QueryWrapper<BlogRelationship>().eq("mid"
+                        , mid))));
+            }
+            List<Integer> distCidList = cidList.stream().distinct().toList();
+
             for (Integer cid :
-                    cidList) {
+                    distCidList) {
                 blogRelationshipQueryWrapper.clear();
 
                 List<BlogMetaDto> blogMetaDtoList =
