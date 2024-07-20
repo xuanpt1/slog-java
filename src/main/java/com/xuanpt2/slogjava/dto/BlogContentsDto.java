@@ -83,6 +83,11 @@ public class BlogContentsDto {
      */
     private List<BlogMetaDto> tagList;
 
+    /**
+     * 点击量
+     */
+    private Integer clicks;
+
     public static BlogContents toBlogContents(BlogContentsDto blogContentsDto){
         BlogContents blogContents = new BlogContents();
         blogContents.setCid(blogContentsDto.getCid());
@@ -97,6 +102,7 @@ public class BlogContentsDto {
         blogContents.setCommentsNum(blogContentsDto.getCommentsNum());
         blogContents.setAllowComment(blogContentsDto.getAllowComment());
         blogContents.setDescription(blogContentsDto.getDescription());
+        blogContents.setClicks(blogContents.getClicks());
         return blogContents;
     }
 
@@ -113,6 +119,7 @@ public class BlogContentsDto {
         this.touchTime = blogContents.getTouchTime();
         this.title = blogContents.getTitle();
         this.status = blogContents.getStatus();
+        this.clicks = blogContents.getClicks();;
         this.tagList = new ArrayList<>();
     }
 

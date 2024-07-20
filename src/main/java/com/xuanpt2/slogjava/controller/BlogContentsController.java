@@ -83,6 +83,19 @@ public class BlogContentsController {
         return TResponseVo.success(blogContentAbstractDtoList);
     }
 
+    @GetMapping("/getClicksIncrease")
+    public TResponseVo<Integer> getClicksIncrease(@RequestBody Map<String ,Object> map){
+        try {
+            BlogContents content = blogContentsService.getById((Serializable) map.get("cid"));
+            int i =content.getClicks() + 1;
+            content.setClicks(i);
+            blogContentsService.saveOrUpdate(content);
+            return TResponseVo.success(i);
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
+
     /**
      * 通过Id获取文章包含tag的全部信息
      * @param map cid
