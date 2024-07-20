@@ -43,6 +43,30 @@ public class BlogCommentsController {
         }
     }
 
+    @PostMapping("/getLiked")
+    public TResponseVo<Integer> getLiked(@RequestBody Map<String, Object> map){
+        try {
+            BlogComments blogComments = blogCommentsService.getById((Serializable) map.get("coid"));
+            int likeCount = blogComments.getLikeCount() + 1;
+            blogComments.setLikeCount(likeCount);
+            return TResponseVo.success(likeCount);
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
+
+    @PostMapping("/getDisliked")
+    public TResponseVo<Integer> getDisliked(@RequestBody Map<String, Object> map){
+        try {
+            BlogComments blogComments = blogCommentsService.getById((Serializable) map.get("coid"));
+            int dislikeCount = blogComments.getDislikeCount() + 1;
+            blogComments.setDislikeCount(dislikeCount);
+            return TResponseVo.success(dislikeCount);
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
+
 //    @GetMapping("/test")
 //    public List<BlogCommentsDto> test(){
 //        return BlogCommentsDto.toDtoTree(BlogCommentsDto.toDtoList(blogCommentsService.list(new QueryWrapper<BlogComments>().eq("cid",2))));

@@ -53,6 +53,8 @@ public class SecurityConfig {
                     conf.requestMatchers(HttpMethod.POST,"/blogContents/getContentsAbsByMetaId").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogContents/getClicksIncrease").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogComments/getCommentsByCid").permitAll();
+                    conf.requestMatchers(HttpMethod.POST,"/blogComments/getDisliked").permitAll();
+                    conf.requestMatchers(HttpMethod.POST,"/blogComments/getLiked").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogComments/saveComment").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogGroups/getAllGroups").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogGroups/getGroupContentsByGroupId").permitAll();
