@@ -48,9 +48,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(conf -> {
 
                     conf.requestMatchers(HttpMethod.GET,"/blogContents/getAllContents").permitAll();
+                    conf.requestMatchers(HttpMethod.GET,"/blogContents/getHotContents").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogContents/getContentById").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogContents/getContentsAbsByMetaId").permitAll();
-                    conf.requestMatchers(HttpMethod.GET,"/blogContents/getClicksIncrease").permitAll();
+                    conf.requestMatchers(HttpMethod.POST,"/blogContents/getClicksIncrease").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogComments/getCommentsByCid").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogComments/saveComment").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogGroups/getAllGroups").permitAll();

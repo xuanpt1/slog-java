@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.xuanpt2.slogjava.dto.BlogContentAbstractDto;
 import com.xuanpt2.slogjava.dto.BlogContentsDto;
 import com.xuanpt2.slogjava.dto.BlogMetaDto;
+import com.xuanpt2.slogjava.dto.HotContentsDto;
 import com.xuanpt2.slogjava.entity.BlogContents;
 import com.xuanpt2.slogjava.entity.BlogMetas;
 import com.xuanpt2.slogjava.entity.BlogRelationship;
@@ -35,6 +36,8 @@ import java.util.stream.Collectors;
  *
  * @author xuanpt2
  * @since 2024-7-4
+ *
+ * TODO 增加PAGE
  */
 @RestController
 @RequestMapping("/blogContents")
@@ -83,7 +86,18 @@ public class BlogContentsController {
         return TResponseVo.success(blogContentAbstractDtoList);
     }
 
-    @GetMapping("/getClicksIncrease")
+    @GetMapping("/getHotContents")
+    public TResponseVo<List<HotContentsDto>> getHotContents(){
+        List<BlogContents> blogContentsList = blogContentsService.list();
+        List<HotContentsDto> hotContentsDtoList = new ArrayList<>();
+        int i = Math.min(blogContentsList.size(), 8);
+        for (int j = 0; j < i; j++) {
+            hotContentsDtoList.add(new HotContentsDto(blogContentsList.get(j)));
+        }
+        return TResponseVo.success(hotContentsDtoList);
+    }
+
+    @PostMapping("/getClicksIncrease")
     public TResponseVo<Integer> getClicksIncrease(@RequestBody Map<String ,Object> map){
         try {
             BlogContents content = blogContentsService.getById((Serializable) map.get("cid"));
@@ -185,6 +199,7 @@ public class BlogContentsController {
     @PostMapping("/saveContent")
     public TResponseVo<Boolean> saveContent(@RequestBody BlogContentsDto blogContentsDto){
         try {
+            blogContentsDto.setClicks(0);
             blogContentsService.saveOrUpdate(BlogContentsDto.toBlogContents(blogContentsDto));
             for (BlogMetaDto blogMetaDto :
                     blogContentsDto.getTagList()) {
