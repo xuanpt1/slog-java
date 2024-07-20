@@ -50,6 +50,7 @@ public class SecurityConfig {
                     conf.requestMatchers(HttpMethod.GET,"/blogContents/getAllContents").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogContents/getContentById").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogContents/getContentsAbsByMetaId").permitAll();
+                    conf.requestMatchers(HttpMethod.GET,"/blogContents/getClicksIncrease").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogComments/getCommentsByCid").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogComments/saveComment").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogGroups/getAllGroups").permitAll();
@@ -57,7 +58,7 @@ public class SecurityConfig {
                     conf.requestMatchers(HttpMethod.GET,"/blogGroups/join/{uri}").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogMetas/getAllMetas").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();
-                    conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();
+                    //conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();
                     conf.anyRequest().authenticated();
                 })
                 .formLogin(conf -> {
