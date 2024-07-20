@@ -27,7 +27,8 @@ public class HotContentsDto {
     public HotContentsDto(BlogContents blogContents){
         this.cid = blogContents.getCid();
         this.clicks = blogContents.getClicks();
-        this.text = RegexUtils.getPureText(blogContents.getText()).substring(0,15);
+        String str = RegexUtils.getPureText(blogContents.getTitle());
+        this.text = (str.length() > 12) ? str.substring(0,12) : str;
     }
 
     public static List<HotContentsDto> toHotContentsDtoList(List<BlogContents> blogContentsList){
