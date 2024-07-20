@@ -43,6 +43,7 @@ public class BlogGroupDto {
     public BlogGroupDto(BlogGroups group, List<String> feeds){
         this.groupUrl = group.getGroupUrl();
         this.groupTitle = group.getGroupTitle();
+        this.groupId = group.getGroupId();
         this.count = group.getCount();
         this.feeds = feeds;
     }
