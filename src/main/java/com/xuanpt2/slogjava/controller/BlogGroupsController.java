@@ -174,7 +174,7 @@ public class BlogGroupsController {
             }
 
             System.out.println(groupInfoList);
-            blogGroupInfoService.saveOrUpdateBatch(groupInfoList);
+            blogGroupInfoService.saveOrUpdateBatchByMultiId(groupInfoList);
             return new TResponseVo<>(200, groupDto,response);
         } catch (IOException e) {
             return TResponseVo.error(500, e.getMessage());
