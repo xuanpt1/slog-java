@@ -58,6 +58,7 @@ public class SecurityConfig {
                     conf.requestMatchers(HttpMethod.POST,"/blogComments/saveComment").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogGroups/getAllGroups").permitAll();
                     conf.requestMatchers(HttpMethod.POST,"/blogGroups/getGroupContentsByGroupId").permitAll();
+                    conf.requestMatchers(HttpMethod.POST,"/blogGroups/joinGroup").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogGroups/join/{uri}").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogMetas/getAllMetas").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();

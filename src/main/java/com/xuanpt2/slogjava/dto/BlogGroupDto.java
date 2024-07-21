@@ -47,4 +47,10 @@ public class BlogGroupDto {
         this.count = group.getCount();
         this.feeds = feeds;
     }
+
+    public BlogGroups toBlogGroups(){
+        return new BlogGroups().setGroupId(this.groupId).setGroupTitle(this.groupTitle).setGroupUrl(this.groupUrl).setCount(this.count);
+    }
+
+
 }

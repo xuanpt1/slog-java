@@ -1,5 +1,6 @@
 package com.xuanpt2.slogjava.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xuanpt2.slogjava.dto.BlogGroupDto;
 import com.xuanpt2.slogjava.dto.BlogMetaDto;
@@ -8,14 +9,17 @@ import com.xuanpt2.slogjava.service.IBlogGroupInfoService;
 import com.xuanpt2.slogjava.service.IBlogGroupsService;
 import com.xuanpt2.slogjava.service.IBlogRssContentsService;
 import com.xuanpt2.slogjava.service.IBlogRssSubService;
+import com.xuanpt2.slogjava.utils.HttpRestUtils;
 import com.xuanpt2.slogjava.vo.TResponseVo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -125,9 +129,61 @@ public class BlogGroupsController {
         return TResponseVo.success(true);
     }
 
+    @PostMapping("/joinGroup")
+    public TResponseVo<BlogGroupDto> joinGroup(@RequestBody Map<String ,Object> map){
+        String url = (String) map.get("url");
+        try {
+            String response = HttpRestUtils.get(url, null);
+            BlogGroupDto groupDto = JSON.parseObject(response, BlogGroupDto.class);
+            System.out.println(groupDto);
+            groupDto.setGroupId(null);
+
+            BlogGroups group = groupDto.toBlogGroups();
+            //List<BlogRssSub> subs = groupDto.getFeeds().stream().map(BlogRssSub::setRurl).toList();
+            List<BlogRssSub> subList = new ArrayList<>();
+            for (String feed :
+                    groupDto.getFeeds()) {
+                subList.add(new BlogRssSub().setRurl(feed));
+            }
+            System.out.println(subList);
+            List<Integer> ridList = new ArrayList<>();
+
+            if (!blogGroupsService.exists(new QueryWrapper<BlogGroups>().eq("group_url", group.getGroupUrl()))){
+                blogGroupsService.saveOrUpdate(group);
+            }
+            Integer groupId = blogGroupsService.getOne(new QueryWrapper<BlogGroups>().eq("group_url",
+                    group.getGroupUrl())).getGroupId();
+
+            for (BlogRssSub sub :
+                    subList) {
+                if (!blogRssSubService.exists(new QueryWrapper<BlogRssSub>().eq("rurl", sub.getRurl()))) {
+                    blogRssSubService.saveOrUpdate(sub);
+                }
+                ridList.add(blogRssSubService.getOne(new QueryWrapper<BlogRssSub>().eq("rurl",
+                        sub.getRurl())).getRid());
+            }
+
+
+            //List<Integer> ridList = blogRssSubService.listObjs(new QueryWrapper<BlogRssSub>().select("rid").in
+            // ("rurl",groupDto.getFeeds()));
+
+            List<BlogGroupInfo> groupInfoList = new ArrayList<>();
+            for (Integer rid:
+                 ridList) {
+                groupInfoList.add(new BlogGroupInfo(groupId, rid));
+            }
+
+            System.out.println(groupInfoList);
+            blogGroupInfoService.saveOrUpdateBatch(groupInfoList);
+            return new TResponseVo<>(200, groupDto,response);
+        } catch (IOException e) {
+            return TResponseVo.error(500, e.getMessage());
+        }
+
+    }
 
     @GetMapping("/join/{uri}")
-    public BlogGroupDto joinGroup(@PathVariable String uri){
+    public BlogGroupDto join(@PathVariable String uri){
         BlogGroupDto blogGroupDto = new BlogGroupDto();
         BlogGroups group = blogGroupsService.getOne(new QueryWrapper<BlogGroups>().eq("group_url",uri));
         List<String> urls =
