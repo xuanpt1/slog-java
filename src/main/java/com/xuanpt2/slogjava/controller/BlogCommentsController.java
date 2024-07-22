@@ -49,6 +49,7 @@ public class BlogCommentsController {
             BlogComments blogComments = blogCommentsService.getById((Serializable) map.get("coid"));
             int likeCount = blogComments.getLikeCount() + 1;
             blogComments.setLikeCount(likeCount);
+            blogCommentsService.saveOrUpdate(blogComments);
             return TResponseVo.success(likeCount);
         }catch (Exception e){
             return TResponseVo.error(500, e.getMessage());
@@ -61,6 +62,7 @@ public class BlogCommentsController {
             BlogComments blogComments = blogCommentsService.getById((Serializable) map.get("coid"));
             int dislikeCount = blogComments.getDislikeCount() + 1;
             blogComments.setDislikeCount(dislikeCount);
+            blogCommentsService.saveOrUpdate(blogComments);
             return TResponseVo.success(dislikeCount);
         }catch (Exception e){
             return TResponseVo.error(500, e.getMessage());
