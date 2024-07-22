@@ -55,7 +55,7 @@ public class BlogContentAbstractDto {
     public BlogContentAbstractDto(BlogContents blogContent, List<BlogMetaDto> blogMetaDtoList){
         this.cid = blogContent.getCid();
         this.title = blogContent.getTitle();
-        this.text = blogContent.getText().substring(0,200);
+        this.text = (blogContent.getText().length() > 210) ? blogContent.getText().substring(0,200) : blogContent.getText();
         this.createdTime = blogContent.getCreatedTime();
         this.tagList = blogMetaDtoList;
         this.imgUrl = RegexUtils.getMdImgUrl(blogContent.getText()).iterator().next();
