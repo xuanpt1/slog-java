@@ -198,14 +198,16 @@ public class BlogGroupsController {
     public TResponseVo<Boolean> removeGroupById(@RequestBody Map<String, Object> map){
         Integer groupId = (Integer) map.get("groupId");
         try {
-            blogGroupsService.removeById(groupId);
-            blogRssSubService.removeBatchByIds(BlogGroupInfo.toRidList(blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id", groupId))));
-            blogGroupInfoService.remove(new QueryWrapper<BlogGroupInfo>().eq("group_id", groupId));
+            boolean flag1 = blogGroupsService.removeById(groupId);
+            boolean flag2 =
+                    blogRssSubService.removeBatchByIds(BlogGroupInfo.toRidList(blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id", groupId))));
+            boolean flag3 = blogGroupInfoService.remove(new QueryWrapper<BlogGroupInfo>().eq("group_id", groupId));
+            return new TResponseVo<>(200, true,"删除结果为" + "\nflag1" +
+                    ":" + flag1 + "\nflag2: " + flag2 +"\nflag3: " + flag3);
         }catch (Exception e){
             return TResponseVo.error(500, e.getMessage());
         }
 
-        return TResponseVo.success(true);
     }
 
     @PostMapping("/joinGroup")
