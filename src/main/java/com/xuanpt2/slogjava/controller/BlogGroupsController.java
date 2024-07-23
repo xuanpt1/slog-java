@@ -13,6 +13,7 @@ import com.xuanpt2.slogjava.utils.HttpRestUtils;
 import com.xuanpt2.slogjava.vo.TResponseVo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
@@ -89,6 +90,81 @@ public class BlogGroupsController {
                 list.addAll(blogRssContentsService.list(new QueryWrapper<BlogRssContents>().eq("rid", rid)));
             }
             return TResponseVo.success(list);
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
+
+    /**
+     * 为群组添加feed
+     * @param map rurl:feed链接      groupId:群组Id
+     * @return  保存链接后的群组dto对象
+     */
+    @PostMapping("/putRssSubByRurl")
+    public TResponseVo<BlogGroupDto> putRssSubByRurl(@RequestBody Map<String, Object> map){
+        String rurl = (String) map.get("rurl");
+        try {
+            Integer rid =
+                    blogRssSubService.getOneOpt(new QueryWrapper<BlogRssSub>().eq("rurl", rurl)).map(BlogRssSub::getRid)
+                            .orElseGet(()-> {
+                                blogRssSubService.saveOrUpdate(new BlogRssSub().setRurl(rurl));
+                                return blogRssSubService.getOne(new QueryWrapper<BlogRssSub>().eq("rurl",rurl)).getRid();
+                            });
+            BlogGroups group = blogGroupsService.getById((Serializable) map.get("groupId"));
+            Integer gid = group.getGroupId();
+            blogGroupInfoService.saveOrUpdateByMultiId(new BlogGroupInfo().setGroupId(gid).setRid(rid));
+
+
+            List<Integer> ridList = BlogGroupInfo.toRidList(
+                    blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id",
+                            gid)));
+            List<String> urls = ridList.isEmpty() ? new ArrayList<>() :
+                    BlogRssSub.toUrlList(blogRssSubService.listByIds(ridList));
+            return TResponseVo.success(new BlogGroupDto(group, urls));
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
+
+    @PostMapping("/putRssSubByRid")
+    public TResponseVo<BlogGroupDto> putRssSubByRid(@RequestBody Map<String, Object> map){
+        try {
+            BlogRssSub sub = blogRssSubService.getById((Serializable) map.get("rid"));
+            BlogGroups group = blogGroupsService.getById((Serializable) map.get("groupId"));
+            Integer gid = group.getGroupId();
+            Integer rid = sub.getRid();
+            blogGroupInfoService.saveOrUpdateByMultiId(new BlogGroupInfo().setGroupId(gid).setRid(rid));
+
+
+            List<Integer> ridList = BlogGroupInfo.toRidList(
+                    blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id",
+                            gid)));
+            List<String> urls = ridList.isEmpty() ? new ArrayList<>() :
+                    BlogRssSub.toUrlList(blogRssSubService.listByIds(ridList));
+            return TResponseVo.success(new BlogGroupDto(group, urls));
+        }catch (Exception e){
+            return TResponseVo.error(500, e.getMessage());
+        }
+    }
+
+    @PostMapping("/removeRssSubFromGroupByRid")
+    public TResponseVo<BlogGroupDto> removeRssSubFromGroupByRid(@RequestBody Map<String, Object> map){
+        try {
+            BlogRssSub sub = blogRssSubService.getById((Serializable) map.get("rid"));
+            BlogGroups group = blogGroupsService.getById((Serializable) map.get("groupId"));
+            Integer gid = group.getGroupId();
+            Integer rid = sub.getRid();
+
+            if (blogGroupInfoService.deleteByMultiId(new BlogGroupInfo(gid,rid))){
+                List<Integer> ridList = BlogGroupInfo.toRidList(
+                        blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id",
+                                gid)));
+                List<String> urls = ridList.isEmpty() ? new ArrayList<>() :
+                        BlogRssSub.toUrlList(blogRssSubService.listByIds(ridList));
+                return TResponseVo.success(new BlogGroupDto(group, urls));
+            }else {
+                return TResponseVo.error(500, "移除失败，未知错误喵");
+            }
         }catch (Exception e){
             return TResponseVo.error(500, e.getMessage());
         }
