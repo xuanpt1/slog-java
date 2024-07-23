@@ -194,9 +194,9 @@ public class BlogGroupsController {
      *
      * @return
      */
-    @PostMapping("removeGroupById")
+    @PostMapping("/removeGroupById")
     public TResponseVo<Boolean> removeGroupById(@RequestBody Map<String, Object> map){
-        Integer groupId = (Integer) map.get("group_id");
+        Integer groupId = (Integer) map.get("groupId");
         try {
             blogGroupsService.removeById(groupId);
             blogRssSubService.removeBatchByIds(BlogGroupInfo.toRidList(blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id", groupId))));
