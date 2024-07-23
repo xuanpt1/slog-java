@@ -49,6 +49,11 @@ public class BlogRssContentsController {
 //        }
 //    }
 
+    /**
+     * 获取所有的 RSS 内容列表
+     *
+     * @return 操作结果
+     */
     @GetMapping("/getAllRssContents")
     public TResponseVo<List<BlogRssContents>> getAllRssContents(){
         try {
@@ -58,6 +63,12 @@ public class BlogRssContentsController {
         }
     }
 
+    /**
+     * 更新RSS订阅
+     * @param map
+     *          包含 URL 的请求参数
+     * @return 操作结果
+     */
     @PostMapping("/updateRssContents")
     public TResponseVo<Boolean> updateRssContents(@RequestBody Map<String , Object> map){
         String url = (String) map.get("url");
@@ -78,6 +89,12 @@ public class BlogRssContentsController {
         return TResponseVo.success(true);
     }
 
+    /**
+     * 根据标识符更新博客的 RSS 内容
+     *
+     * @param map 包含更新所需的标识符的请求参数
+     * @return 更新操作的结果
+     */
     @PostMapping("/updateContentsByRid")
     public TResponseVo<Boolean> updateContentByRid(@RequestBody Map<String, Object> map){
         BlogRssSub sub = blogRssSubService.getById((Serializable) map.get("rid"));

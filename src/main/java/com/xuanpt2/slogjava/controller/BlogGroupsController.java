@@ -49,9 +49,8 @@ public class BlogGroupsController {
 
     /**
      * 获取所有群组信息
-     * @param
      *
-     * @return
+     * @return 返回群组信息列表
      */
     @GetMapping("/getAllGroups")
     public TResponseVo<List<BlogGroupDto>> getAllGroups(){
@@ -77,6 +76,13 @@ public class BlogGroupsController {
         return TResponseVo.success(groupDtoList);
     }
 
+    /**
+     * 获取群组信息
+     *
+     * @param map groupId:群组Id
+     * @return 返回群组信息
+     */
+    @GetMapping("/getGroupInfoByGroupId")
     @PostMapping("/getGroupContentsByGroupId")
     public TResponseVo<List<BlogRssContents>> getGroupContentsByGroupId(@RequestBody Map<String, Object> map){
         List<BlogRssContents> list = new ArrayList<>();
@@ -126,6 +132,13 @@ public class BlogGroupsController {
         }
     }
 
+
+    /**
+     * 根据提供的 rid（RSS 订阅记录 ID）和 groupId（博客组 ID）更新或创建 BlogGroupInfo 记录
+     * 返回包含相应 BlogGroupDto 的成功响应或 500 错误响应
+     * @param map 包含 "rid" 和 "groupId" 的键值对
+     * @return TResponseVo<BlogGroupDto> 响应对象，包含 BlogGroupDto 或错误信息
+     */
     @PostMapping("/putRssSubByRid")
     public TResponseVo<BlogGroupDto> putRssSubByRid(@RequestBody Map<String, Object> map){
         try {

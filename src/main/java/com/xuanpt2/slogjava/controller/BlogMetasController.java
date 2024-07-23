@@ -65,8 +65,10 @@ public class BlogMetasController {
     public TResponseVo<Boolean> removeMetaById(@RequestBody Map<String, Object> map){
         try {
             boolean flag1 = blogMetasService.removeById((Serializable) map.get("mid"));
-            boolean flag2 = blogRelationshipService.remove(new QueryWrapper<BlogRelationship>().eq("mid",
-                    (Serializable) map.get("mid")));
+            boolean flag2 = blogRelationshipService.list(new QueryWrapper<BlogRelationship>().eq(
+                            "mid", (Serializable) map.get("mid"))).isEmpty()
+                            || blogRelationshipService.remove(new QueryWrapper<BlogRelationship>().eq(
+                            "mid", (Serializable) map.get("mid")));
             return (flag1 && flag2) ? TResponseVo.success(true) : TResponseVo.error(500, "移除失败");
         }catch (Exception e){
             return TResponseVo.error(500, e.getMessage());
