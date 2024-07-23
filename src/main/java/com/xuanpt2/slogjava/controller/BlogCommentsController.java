@@ -106,9 +106,10 @@ public class BlogCommentsController {
     public TResponseVo<Boolean> removeCommentByCoid(@RequestBody Map<String, Object> map){
         try {
             boolean flag1 = blogCommentsService.removeById((Serializable) map.get("coid"));
-            boolean flag2 = blogCommentsService.remove(new QueryWrapper<BlogComments>().eq("pcoid",
-                    (Serializable) map.get("coid")));
-            return (flag1 && flag2) ? TResponseVo.success(true) : TResponseVo.error(500, "移除失败喵");
+            boolean flag2 = blogCommentsService.list(new QueryWrapper<BlogComments>().eq("pcoid", (Serializable) map.get("coid"))).isEmpty()
+                    || blogCommentsService.remove(new QueryWrapper<BlogComments>().eq("pcoid", (Serializable) map.get("coid")));
+            return (flag1 && flag2) ? TResponseVo.success(true) : TResponseVo.error(500,
+                    "移除失败喵!" + " flag1:"+ flag1 +" flag2:"+ flag2);
         }catch (Exception e){
             return TResponseVo.error(500, e.getMessage());
         }
