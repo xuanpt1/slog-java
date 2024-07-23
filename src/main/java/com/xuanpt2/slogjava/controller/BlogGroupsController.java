@@ -82,7 +82,6 @@ public class BlogGroupsController {
      * @param map groupId:群组Id
      * @return 返回群组信息
      */
-    @GetMapping("/getGroupInfoByGroupId")
     @PostMapping("/getGroupContentsByGroupId")
     public TResponseVo<List<BlogRssContents>> getGroupContentsByGroupId(@RequestBody Map<String, Object> map){
         List<BlogRssContents> list = new ArrayList<>();
