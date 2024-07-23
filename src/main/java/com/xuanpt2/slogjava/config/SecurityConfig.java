@@ -62,6 +62,7 @@ public class SecurityConfig {
                     conf.requestMatchers(HttpMethod.GET,"/blogGroups/join/{uri}").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogMetas/getAllMetas").permitAll();
                     conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();
+                    conf.requestMatchers(HttpMethod.POST,"/blogFile/upload").permitAll();
                     //conf.requestMatchers(HttpMethod.GET,"/blogRssContents/getAllRssContents").permitAll();
                     conf.anyRequest().authenticated();
                 })

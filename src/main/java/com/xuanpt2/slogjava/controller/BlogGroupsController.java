@@ -60,9 +60,12 @@ public class BlogGroupsController {
         try {
             for (BlogGroups group :
                     groupsList) {
-                List<String> urls =
-                        BlogRssSub.toUrlList(blogRssSubService.listByIds(BlogGroupInfo.toRidList(
-                                blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id", group.getGroupId())))));
+                List<Integer> ridList = BlogGroupInfo.toRidList(
+                        blogGroupInfoService.list(new QueryWrapper<BlogGroupInfo>().eq("group_id",
+                                group.getGroupId())));
+                List<String> urls = ridList.isEmpty() ? new ArrayList<>() :
+                        BlogRssSub.toUrlList(blogRssSubService.listByIds(ridList));
+
                 groupDtoList.add(new BlogGroupDto(group, urls));
             }
         }catch (Exception e){
