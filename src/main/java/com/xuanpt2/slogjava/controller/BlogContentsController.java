@@ -174,7 +174,8 @@ public class BlogContentsController {
             if (!blogContentsDto.getTagList().isEmpty()){
                 for (BlogMetaDto blogMetaDto :
                         blogContentsDto.getTagList()) {
-                    flag3 = blogRelationshipService.saveOrUpdate(new BlogRelationship().setCid(blogContentsDto.getCid())
+                    flag3 =
+                            blogRelationshipService.saveOrUpdateByMultiId(new BlogRelationship().setCid(blogContentsDto.getCid())
                            .setMid(blogMetaDto.getId()));
                     if (!flag3){
                         return TResponseVo.error(500, "更新失败喵:" + blogMetaDto);
