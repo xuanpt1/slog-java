@@ -164,14 +164,28 @@ public class BlogContentsController {
     @PostMapping("/updateContent")
     public TResponseVo<Boolean> updateContent(@RequestBody BlogContentsDto blogContentsDto){
         try {
-            blogContentsService.saveOrUpdate(BlogContentsDto.toBlogContents(blogContentsDto));
-            blogRelationshipService.remove(new QueryWrapper<BlogRelationship>().eq("cid",blogContentsDto.getCid()));
-            for (BlogMetaDto blogMetaDto :
-                    blogContentsDto.getTagList()) {
-                blogRelationshipService.saveOrUpdateByMultiId(new BlogRelationship(blogContentsDto.getCid(),
-                        blogMetaDto.getId()));
+            boolean flag1 = blogContentsService.saveOrUpdate(BlogContentsDto.toBlogContents(blogContentsDto));
+            boolean flag2 =
+                    blogRelationshipService.list(new QueryWrapper<BlogRelationship>()
+                            .eq("cid", blogContentsDto.getCid())).isEmpty()
+                            || blogRelationshipService.remove(new QueryWrapper<BlogRelationship>()
+                            .eq("cid", blogContentsDto.getCid()));
+            boolean flag3 = false;
+            if (!blogContentsDto.getTagList().isEmpty()){
+                for (BlogMetaDto blogMetaDto :
+                        blogContentsDto.getTagList()) {
+                    flag3 = blogRelationshipService.saveOrUpdate(new BlogRelationship().setCid(blogContentsDto.getCid())
+                           .setMid(blogMetaDto.getId()));
+                    if (!flag3){
+                        return TResponseVo.error(500, "更新失败喵:" + blogMetaDto);
+                    }
+                }
+            }else {
+                flag3 = true;
             }
-            return TResponseVo.success(true);
+
+            return new TResponseVo<Boolean>(200, flag1 && flag2 && flag3, "flag1:" + flag1 + " flag2:" + flag2 + " " +
+                    "flag3:" + flag3);
         }catch (Exception e){
             return TResponseVo.error(500,e.getMessage());
         }
